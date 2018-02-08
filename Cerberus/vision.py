@@ -6,5 +6,5 @@ target = {
 }
 
 
-def acquireTarget():
+def acquire_target():
     return True

@@ -47,14 +47,14 @@ if (__name__ == "__main__"):
     while(not shutdown):
         handle_shutdown_button()
 
-        if(vision.acquireTarget()):
+        if(vision.acquire_target()):
             if(not vision.is_friendly):
                 # We have a target, and no friend detected
                 sounds.play(sounds.TARGET_ACQUIRED_WAV, False)
                 servos.move_to(vision.target.x, vision.target.y)
                 gun.shoot()
 
-                while vision.acquireTarget():
+                while vision.acquire_target():
                     servos.move_to(vision.target.x, vision.target.y)
                     if(not vision.is_friendly):
                         gun.shoot()
