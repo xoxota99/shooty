@@ -98,5 +98,6 @@ ENV/
 # mypy
 .mypy_cache/
 
-media/portal/
-media/tf2/
+# non-CC / non-GPL media
+portal/
+tf2/
