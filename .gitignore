@@ -99,5 +99,5 @@ ENV/
 .mypy_cache/
 
 # non-CC / non-GPL media
-portal/
-tf2/
+Cerberus/media/portal/
+Cerberus/media/tf2/
