@@ -1,6 +1,7 @@
 import os
 import subprocess
 import time
+import sys
 
 STARTUP_WAV = "media/startup.wav"
 
@@ -31,17 +32,29 @@ CLICK_4 = "media/portal/Turret_click_4.wav"
 CLICK_5 = "media/portal/Turret_click_5.wav"
 CLICK_6 = "media/portal/Turret_click_6.wav"
 
-procmap = {
-    'wav': 'aplay ',
-    'mp3': 'mpg123 -q'
+play_proc_map = {
+    'darwin': {
+        'wav': 'afplay'
+    },
+    'win32': {},
+    'linux': {
+        'wav': 'aplay',
+        'mp3': 'mpg123 -q'
+    }
 }
+
+
+VOLUME = 50
+platform = sys.platform
+if(platform.startswith("linux")):
+    platform = "linux"
 
 
 def play(soundfile, blocking=True):
     ext = soundfile.lower().strip()[-3:]
     print(ext)
-    if(ext in procmap.keys()):
-        proc = procmap[ext]
+    if(ext in play_proc_map[platform].keys()):
+        proc = play_proc_map[platform][ext]
     else:
         print("Unrecognized file format: '" + ext.upper()+"'")
         return False
@@ -51,13 +64,77 @@ def play(soundfile, blocking=True):
     loc = os.path.dirname(os.path.realpath(__file__))
 
     # probably doesn't escape weird path characters, spaces, etc. properly
-    p = subprocess.call(proc + soundfile + ("" if blocking else " &"),
+    p = subprocess.call(proc + " " + soundfile + ("" if blocking else " &"),
                         shell=True, cwd=loc)
     return p
 
 
+def mute(state=True):
+    """
+        Mute / unmute sounds. NOTE: This controls Master volume. All audio
+        sources will be affected.
+    """
+
+    proc = {
+        'darwin': lambda: "osascript -e 'set volume output muted "
+        + ("true" if state else "false") + "'",
+        'linux': lambda: "amixer -D pulse sset Master "
+        + ("mute" if state else "unmute") + " &",
+        'win32': lambda: "nircmd.exe mutesysvolume "
+        + ("0" if state else "1") + " &",
+    }[platform](),
+
+    p = subprocess.call(proc, shell=True)
+    return p
+
+
+def volume(pcnt):
+    """
+        This controls Master volume. All audio
+        sources will be affected.
+        :param pcnt - Percent volume to set, as an integer
+        between 1-100.
+    """
+
+    proc = {
+        'darwin': lambda: 'osascript -e "set volume {:.2f}"'
+        .format(7*pcnt/100),
+        'linux': lambda: "amixer -D pulse sset Master {}% &"
+        .format(pcnt),
+        'win32': lambda: "nircmd.exe setsysvolume {}"
+        .format(int(65535*pcnt/100)),
+    }[platform](),
+
+    p = subprocess.call(proc, shell=True)
+
+    return p
+
+
+mute(False)
+volume(VOLUME)  # initialize volume
+
 if (__name__ == "__main__"):
     while(True):
+        play("media/portal/GLaDOS_init_surprise.wav", True)
+        print("returned")
+        time.sleep(1.5)
+
+        mute()
+        play("media/portal/GLaDOS_init_surprise.wav", True)
+        print("returned")
+        time.sleep(1.5)
+
+        mute(False)
+        play("media/portal/GLaDOS_init_surprise.wav", True)
+        print("returned")
+        time.sleep(1.5)
+
+        volume(10)
+        play("media/portal/GLaDOS_init_surprise.wav", True)
+        print("returned")
+        time.sleep(1.5)
+
+        volume(50)
         play("media/portal/GLaDOS_init_surprise.wav", True)
         print("returned")
         time.sleep(1.5)
