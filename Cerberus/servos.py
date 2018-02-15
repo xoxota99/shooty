@@ -1,7 +1,8 @@
 from __future__ import division
-import math
+import helper
 import time
 import Adafruit_PCA9685
+import math
 
 # Set frequency to 50hz, good for servos.
 PWM_FREQ = 50
@@ -21,6 +22,29 @@ SERVO_MAX = 600
 # Pin configuration on the Adafruit board. Which pins are driving which servos?
 PAN_PIN = 0
 TILT_PIN = 1
+
+position = {
+    'x': 0,
+    'y': 0
+}
+
+
+def generate_scan_curve(min, max, steps):
+    """
+    generate an array of step values along a sine curve, from min, to max,
+    and back to min.
+    """
+    retval = []
+    halfRange = (max - min) / 2
+    for i in range(1, steps):
+        retval.append(min + halfRange + math.sin(math.pi*i/(steps-2))
+                      * halfRange)
+    return retval
+
+
+scan_steps = generate_scan_curve(-90, 90, 180)
+current_scan_step = 0
+scan_dirty = True
 
 
 def set_servo_pulse(channel, pulse):
@@ -50,10 +74,48 @@ def move_to(pan, tilt=0):
     NOTE: This function is non-blocking. This means the physical servo may
     continue to move to it's new setpoint after this function has returned.
     """
-    p = math.map(pan, -90, 90, SERVO_MIN, SERVO_MAX)
-    t = math.map(tilt, -90, 90, SERVO_MIN, SERVO_MAX)
+    global scan_dirty
+    scan_dirty = True
+
+    p = helper.map(pan, -90, 90, SERVO_MIN, SERVO_MAX)
+    t = helper.map(tilt, -90, 90, SERVO_MIN, SERVO_MAX)
+
+    pCurve = helper.generateCurve(position['x'], p, SERVO_MAX_SPEED)
+    tCurve = helper.generateCurve(position['y'], t, SERVO_MAX_SPEED)
+
     set_servo_pulse(PAN_PIN, p)
     set_servo_pulse(TILT_PIN, t)
+    position['x'] = p
+    position['y'] = t
+
+
+def scan():
+    global scan_dirty
+    global current_scan_step
+
+    if scan_dirty:
+        # Where is the pan servo right now? Rcalculate the closest step,
+        # according to the internal state (which might not match the physical
+        # state).
+        best_pos = 0
+        i = 0
+        for pan_pos in scan_steps:
+            if abs(pan_pos-position['x']) < abs(scan_steps[best_pos]
+                                                - position['x']):
+                best_pos = i
+            i += 1
+        current_scan_step = best_pos
+
+    current_scan_step += 1
+    p = helper.map(scan_steps[current_scan_step], -90, 90,
+                   SERVO_MIN, SERVO_MAX)
+
+    if position['x'] != p:
+        # set_servo_pulse(PAN_PIN, p)
+        print("set_servo_pulse {}", p)
+        position['x'] = p
+
+    scan_dirty = False
 
 
 if __name__ == "__main__":
@@ -62,32 +124,13 @@ if __name__ == "__main__":
 
     Usage: servos.py [<pin#> <angle_degrees>]
     """
-    import sys
-    if(len(sys.argv) == 1):
-        # no arguments.
-        while True:
-            # Move servo on channel O between extremes.
-            set_servo_pulse(PAN_PIN, SERVO_MIN)
-            set_servo_pulse(TILT_PIN, SERVO_MIN)
-            time.sleep(1)
-            set_servo_pulse(TILT_PIN, SERVO_MAX)
-            time.sleep(1)
-            set_servo_pulse(PAN_PIN, SERVO_MAX)
-            time.sleep(1)
-            set_servo_pulse(TILT_PIN, SERVO_MIN)
-            time.sleep(1)
-    elif(len(sys.argv) >= 3):
-        srv_num = int(sys.argv[1])
-        if(srv_num < 16):
-            srv_angle = int(sys.argv[2])
-            if(-90 <= srv_angle <= 90):
-                set_servo_pulse(srv_num, map(srv_angle, -90, 90, SERVO_MIN,
-                                             SERVO_MAX))
-            else:
-                print("Invalid argument <degrees>. Valid values are between -90 \
-                and 90.")
-        else:
-            print("Invalid argument <pin#>. Valid values are between 0 and \
-            15.")
-    else:
-        print("Usage: servos.py [<pin#> <angle_degrees>]")
+    position = {
+        'x': 0,
+        'y': 0
+    }
+
+    set_servo_pulse(PAN_PIN, 0)
+    set_servo_pulse(TILT_PIN, 0)
+
+    while(True):
+        scan()
