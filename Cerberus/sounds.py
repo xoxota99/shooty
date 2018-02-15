@@ -32,9 +32,12 @@ CLICK_4 = "media/portal/Turret_click_4.wav"
 CLICK_5 = "media/portal/Turret_click_5.wav"
 CLICK_6 = "media/portal/Turret_click_6.wav"
 
+
 play_proc_map = {
     'darwin': {
-        'wav': 'afplay'
+        'wav': 'afplay',
+        'mp3': 'afplay',
+        'ogg': 'ogg123'
     },
     'win32': {},
     'linux': {
@@ -52,7 +55,7 @@ if(platform.startswith("linux")):
 
 def play(soundfile, blocking=True):
     ext = soundfile.lower().strip()[-3:]
-    print(ext)
+
     if(ext in play_proc_map[platform].keys()):
         proc = play_proc_map[platform][ext]
     else:
@@ -115,6 +118,7 @@ volume(VOLUME)  # initialize volume
 
 if (__name__ == "__main__"):
     while(True):
+        play("media/test.mp3", True)
         play("media/portal/GLaDOS_init_surprise.wav", True)
         print("returned")
         time.sleep(1.5)
