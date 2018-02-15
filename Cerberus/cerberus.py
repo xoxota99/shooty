@@ -15,7 +15,6 @@ if (__name__ == "__main__"):
 
     servos.move_to(0, 0)
     sounds.play(sounds.STARTUP_WAV, False)
-    gun.laser()
 
     while(True):
         if(vision.acquire_target()):

@@ -3,24 +3,22 @@ import sounds
 import time
 import random
 
-LASER_PIN = 18
-TRIGGER_PIN = 16
+TRIGGER_PIN = 5
 USE_SHOT_COUNTER = True
 MAGAZINE_SIZE = 100
 TRIGGER_DOWN_MILLIS = 50  # time to hold the trigger down.
 
 GPIO.setmode(GPIO.BOARD)
 GPIO.setwarnings(False)
-GPIO.setup(LASER_PIN, GPIO.OUT)
 GPIO.setup(TRIGGER_PIN, GPIO.OUT)
 
-gun_safety = False
+safety_on = False
 shot_count = 0
 
 
 def make_safe(state=True):
-    global gun_safety
-    gun_safety = state
+    global safety_on
+    safety_on = state
 
 
 def reset():
@@ -35,7 +33,7 @@ def shoot():
     """
     global shot_count
 
-    if(not gun_safety):
+    if(not safety_on):
         if(shot_count < MAGAZINE_SIZE or not USE_SHOT_COUNTER):
             GPIO.output(TRIGGER_PIN, GPIO.HIGH)
             shot_count += 1
@@ -62,22 +60,8 @@ def shoot():
         return False
 
 
-def laser(state=True):
-    GPIO.output(LASER_PIN, GPIO.HIGH if state else GPIO.LOW)
-
-
 if (__name__ == "__main__"):
     """Test the gun. Very dangerous."""
-
-# fire the laser.
-    laser()
-    time.sleep(1)
-    sounds.play(sounds.SCAN_WAV)
-
-# kill the laser.
-    laser(False)
-    time.sleep(1)
-    sounds.play(sounds.SCAN_WAV)
 
 # fire the gun once.
     shoot()
@@ -95,7 +79,8 @@ if (__name__ == "__main__"):
     for x in range(0, 3):
         shoot()
         time.sleep(1)
-    # reset the shot count.
+
+# reset the shot count.
     reset()
     sounds.play(sounds.SCAN_WAV)
 
