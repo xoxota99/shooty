@@ -1,5 +1,7 @@
-# cerberus
- Cerberus is an autonomous paintball sentry platform, powered by OpenCV on Raspberry Pi.
+# Cerberus
+ Cerberus is an autonomous paintball sentry platform, powered by OpenCV on Raspberry Pi. It can be easily modified to use airsoft or Nerf guns.
+
+**NOTE: This project is a _work in progress_. As of this writing (February-ish 2018), none of this is working yet. Caveat Emptor, and pull requests are welcome.**
 
 ## General Algorithm
     * Use OpenCV frame-to-frame comparison to determine if there is a target in the frame. Also look for the disable signal (stop sign, specific t-shirt logo, etc).
@@ -8,9 +10,8 @@
     * GOTO 10
 
 ## Future Improvements
-    * Add a speaker to produce audible warning beeps.
-    * Use laser pointer to auto-correct aiming / target leading.
-    * Use a PID loop or Kalman filter (or something else?) to auto-correct targeting.
+    * Use laser pointer to auto-calibrate or autocorrect aiming / target leading.
+    * Use a PID loop or Kalman filter (or something else?) to aim, instead of direct-drive servo movement.
     * Add controls for windage and elevation.
     * Stereo cameras, for target distance estimation and auto-elevation correction
 
@@ -27,10 +28,9 @@
     * [Tripod](https://www.amazon.com/dp/B005KP473Q)
     * Enclosure: I used this [Pelican 1040 case](https://www.amazon.com/dp/B002E9GQEE), and mounted it to the front of the tripod platform using an L-bracket.
     * Battery: I used [this 2S LiPo](https://hobbyking.com/en_us/turnigy-nano-tech-ultimate-4600mah-2s2p-90c-hardcase-lipo-short-pack-roar-brca-approved.html). This battery is probably overkill for this project, but I liked it because it was the right dimensions to fit into the enclosure I chose, the right voltage to drive the regulator to 5V / 10A, and it has capacity and discharge rate to spare.
-    * Paintball gun, with an "E-Trigger". I used the SmartParts Ion, which you can get for pretty cheap on eBay. I mounted the CO2 tank on one of the tripod legs, and used a hose to connect it to the actual gun. This removes some of the rotating mass from the gimbal setup, putting less strain on the motors, and making the gun easier to balance. I recommend this approach. otherwise, as the CO2 is used up, the center of mass will shift towards the front of the gun, unbalancing the platform, or throwing off your aim.
-    * (Optional) Laser-dot sight. I used [this](https://www.amazon.com/dp/B01ITK4PEO), since I can "fire" it by pulling a GPIO pin LOW.
-    * (Optional) Soft Shutdown switch. I used [this](https://www.amazon.com/dp/B011DRFRVA), and followed [this tutorial](http://www.barryhubbard.com/raspberry-pi/howto-raspberry-pi-raspbian-power-on-off-gpio-button/) to set it up. Note that, even with the Pi off, there is still some residual power draw, so this momentary switch solution isn't great for a battery powered system. You'll have to physically disconnect the battery after shutdown.
-    * (Optional) Hard Shutdown switch. Something like [this](https://www.sparkfun.com/products/11138) would work. Wiring this directly into the positive output from the battery lead will hard power-down the entire system. If that's what you want, use this instead of the "Soft shutdown" switch. You can use this alongside the soft shutdown switch for a double-safety system.
+    * Paintball gun, with an "E-Trigger". I used the [SmartParts Ion](http://www.ebay.com/bhp/ion-paintball-gun), which you can get for pretty cheap on eBay. I mounted the [CO2 tank](https://www.amazon.com/dp/B01N1XA944) on one of the tripod legs, and used a [hose](https://www.amazon.com/dp/B0000B37UH) to connect it to the actual gun. This removes some of the rotating mass from the gimbal setup, putting less strain on the motors, but moves the center of gravity forward, making the gun harder to balance in the beginning. On the plus side, it prevents the center of gravity from moving as the tank empties over time.
+    * (Optional) Laser pointer, zip-tied to the barrel, for calibration.
+    * (Optional) Hard Shutdown switch. Something like [this](https://www.sparkfun.com/products/11138) would work. Wiring this directly into the positive output from the battery lead will power-down the entire system.
     * (Optional) Speaker, for making fun, Team-Fortress-inspired sentry gun noises. I used:
         * This [speaker](https://www.adafruit.com/product/1674), mounted to the inside of the enclosure.
         * This [amplifier](https://www.adafruit.com/product/2130), for driving the speaker from the RPi's underpowered audio jack.
