@@ -3,27 +3,28 @@ import subprocess
 import time
 import sys
 
-STARTUP_WAV = "media/startup.wav"
+STARTUP = "media/startup.wav"
 
 # TF2 sounds
-# SCAN_WAV = "media/tf2/sentry_scan2.wav"
-# TARGET_ACQUIRED_WAV = "media/tf2/sentry_spot_client.wav"
+# SCAN = "media/tf2/sentry_scan2.wav"
+# TARGET_ACQUIRED = "media/tf2/sentry_spot_client.wav"
 
 # Portal sounds
-# STARTUP_WAV = "media/portal/Turret_sentry_mode_activated.wav"
-SCAN_WAV = "media/portal/Turret_ping.wav"
-SHUTTING_DOWN_WAV = "media/portal/Turret_shutting_down.wav"
+# STARTUP = "media/portal/Turret_sentry_mode_activated.wav"
+SCAN = "media/portal/Turret_ping.wav"
+SHUTTING_DOWN = "media/portal/Turret_shutting_down.wav"
 
-TARGET_ACQUIRED_WAV = "media/portal/Turret_target_acquired.wav"
-TARGET_ACQUIRED_WAV_2 = "media/portal/Turret_there_you_are.wav"
-TARGET_ACQUIRED_WAV_3 = "media/portal/Turret_I_see_you.wav"
-TARGET_ACQUIRED_WAV_4 = "media/portal/GLaDOS_surprise.wav"
-TARGET_ACQUIRED_WAV_5 = "media/portal/Turret_there_you_are_2.wav"
+TARGET_ACQUIRED = "media/portal/Turret_target_acquired.wav"
+TARGET_ACQUIRED_2 = "media/portal/Turret_there_you_are.wav"
+TARGET_ACQUIRED_3 = "media/portal/Turret_I_see_you.wav"
+TARGET_ACQUIRED_4 = "media/portal/GLaDOS_surprise.wav"
+TARGET_ACQUIRED_5 = "media/portal/Turret_there_you_are_2.wav"
 
-TARGET_LOST_WAV = "media/portal/Turret_target_lost.wav"
+TARGET_LOST = "media/portal/Turret_target_lost.wav"
+TURRET_ACTIVATED = "media/portal/Turret_sentry_mode_activated.wav"
 
-HELLO_FRIEND_WAV = "media/portal/Turret_hello_friend.wav"
-HELLO_FRIEND_WAV_2 = "media/portal/Turret_can_i_help_you.wav"
+HELLO_FRIEND = "media/portal/Turret_hello_friend.wav"
+HELLO_FRIEND_2 = "media/portal/Turret_can_i_help_you.wav"
 
 CLICK = "media/portal/Turret_click.wav"
 CLICK_2 = "media/portal/Turret_click_2.wav"
@@ -47,7 +48,7 @@ play_proc_map = {
 }
 
 
-VOLUME = 50
+VOLUME = 100
 platform = sys.platform
 if(platform.startswith("linux")):
     platform = "linux"
@@ -81,7 +82,7 @@ def mute(state=True):
     proc = {
         'darwin': lambda: "osascript -e 'set volume output muted "
         + ("true" if state else "false") + "'",
-        'linux': lambda: "amixer -D pulse sset Master "
+        'linux': lambda: "amixer sset PCM "
         + ("mute" if state else "unmute") + " &",
         'win32': lambda: "nircmd.exe mutesysvolume "
         + ("0" if state else "1") + " &",
@@ -102,7 +103,7 @@ def volume(pcnt):
     proc = {
         'darwin': lambda: 'osascript -e "set volume {:.2f}"'
         .format(7*pcnt/100),
-        'linux': lambda: "amixer -D pulse sset Master {}% &"
+        'linux': lambda: "amixer sset PCM {}% &"
         .format(pcnt),
         'win32': lambda: "nircmd.exe setsysvolume {}"
         .format(int(65535*pcnt/100)),
@@ -113,32 +114,37 @@ def volume(pcnt):
     return p
 
 
-mute(False)
+# mute(False)
 volume(VOLUME)  # initialize volume
 
 if (__name__ == "__main__"):
     while(True):
+        print("===PLAY (MP3, Volume 90%)===\n")
+        volume(90)
         play("media/test.mp3", True)
-        play("media/portal/GLaDOS_init_surprise.wav", True)
-        print("returned")
+        print("returned\n")
         time.sleep(1.5)
 
+        print("===PLAY (WAV, MUTE)===\n")
         mute()
         play("media/portal/GLaDOS_init_surprise.wav", True)
-        print("returned")
+        print("returned\n")
         time.sleep(1.5)
 
+        print("===PLAY (WAV, UNMUTE)===\n")
         mute(False)
         play("media/portal/GLaDOS_init_surprise.wav", True)
-        print("returned")
+        print("returned\n")
         time.sleep(1.5)
 
-        volume(10)
+        print("===PLAY (WAV, Volume 70%)===\n")
+        volume(70)
         play("media/portal/GLaDOS_init_surprise.wav", True)
-        print("returned")
+        print("returned\n")
         time.sleep(1.5)
 
-        volume(50)
+        print("===PLAY (WAV, Volume 80%)===\n")
+        volume(80)
         play("media/portal/GLaDOS_init_surprise.wav", True)
-        print("returned")
+        print("returned\n")
         time.sleep(1.5)
