@@ -66,13 +66,13 @@ if (__name__ == "__main__"):
 # fire the gun once.
     shoot()
     time.sleep(1)
-    sounds.play(sounds.SCAN_WAV)
+    sounds.play(sounds.SCAN)
 
 # fire the gun n times.
     for x in range(0, 3):
         shoot()
     time.sleep(1)
-    sounds.play(sounds.SCAN_WAV)
+    sounds.play(sounds.SCAN)
 
 # fire the gun while empty.
     shot_count = MAGAZINE_SIZE
@@ -82,19 +82,19 @@ if (__name__ == "__main__"):
 
 # reset the shot count.
     reset()
-    sounds.play(sounds.SCAN_WAV)
+    sounds.play(sounds.SCAN)
 
 # make safe.
     make_safe()
     time.sleep(1)
-    sounds.play(sounds.SCAN_WAV)
+    sounds.play(sounds.SCAN)
 
 # attempt to fire the gun once, while safety is on.
     shoot()
     time.sleep(1)
-    sounds.play(sounds.SCAN_WAV)
+    sounds.play(sounds.SCAN)
 
 # make unsafe.
     make_safe(False)
     time.sleep(1)
-    sounds.play(sounds.SCAN_WAV)
+    sounds.play(sounds.SCAN)

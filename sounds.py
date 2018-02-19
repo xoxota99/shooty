@@ -11,7 +11,8 @@ STARTUP = "media/startup.wav"
 
 # Portal sounds
 # STARTUP = "media/portal/Turret_sentry_mode_activated.wav"
-SCAN = "media/portal/Turret_ping.wav"
+# SCAN = "media/portal/Turret_ping.wav"
+SCAN = "media/tf2/sentry_scan2.wav"
 SHUTTING_DOWN = "media/portal/Turret_shutting_down.wav"
 
 TARGET_ACQUIRED = "media/portal/Turret_target_acquired.wav"
@@ -20,7 +21,12 @@ TARGET_ACQUIRED_3 = "media/portal/Turret_I_see_you.wav"
 TARGET_ACQUIRED_4 = "media/portal/GLaDOS_surprise.wav"
 TARGET_ACQUIRED_5 = "media/portal/Turret_there_you_are_2.wav"
 
+TURRET_FIRE = "media/portal/Turret_fire.wav"
+TURRET_FIRE_2 = "media/portal/Turret_fire_2.wav"
+TURRET_FIRE_3 = "media/portal/Turret_fire_3.wav"
+
 TARGET_LOST = "media/portal/Turret_target_lost.wav"
+
 TURRET_ACTIVATED = "media/portal/Turret_sentry_mode_activated.wav"
 
 HELLO_FRIEND = "media/portal/Turret_hello_friend.wav"
@@ -63,13 +69,14 @@ def play(soundfile, blocking=True):
         print("Unrecognized file format: '" + ext.upper()+"'")
         return False
 
-    print(proc + soundfile + ("" if blocking else " &"))
+    # print(proc + soundfile + ("" if blocking else " &"))
 
     loc = os.path.dirname(os.path.realpath(__file__))
 
     # probably doesn't escape weird path characters, spaces, etc. properly
     p = subprocess.call(proc + " " + soundfile + ("" if blocking else " &"),
                         shell=True, cwd=loc)
+
     return p
 
 

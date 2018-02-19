@@ -1,4 +1,5 @@
 import math
+import time
 
 
 def map(x, in_min, in_max, out_min, out_max):
@@ -24,3 +25,11 @@ def generateCurve(start, end, step_size_limit):
         steps.append(n)
 
     return steps
+
+
+def delay(millis):
+    t = int(time.time() * 1000)
+    while True:
+        t2 = int(time.time() * 1000)
+        if(t2-t >= millis):
+            break

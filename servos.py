@@ -7,6 +7,7 @@ import Adafruit_PCA9685
 import math
 import logging
 import sounds
+import random
 
 logging.basicConfig(level=logging.INFO)
 
@@ -28,6 +29,7 @@ SERVO_MAX = 450
 # Pin configuration on the Adafruit board. Which pins are driving which servos?
 PAN_PIN = 0
 TILT_PIN = 1
+LASER_PIN = 2
 
 """
 Position of the servos, in degrees, within the range -90 to +90, with
@@ -156,11 +158,20 @@ class ScanWorker(Thread):
         Thread.__init__(self)
 
     def run(self):
+        pinging = False
         sounds.play(sounds.TURRET_ACTIVATED, False)
         while not self.stopped:
             if not self.paused:
                 scan()
-                time.sleep(0.03)
+                t = int(round(time.time())) % 3
+                if t == 0 and not pinging:
+                    pinging = True
+                    sounds.play(sounds.SCAN, False)
+                elif t != 0:
+                    pinging = False
+
+            time.sleep(0.03)
+
         sounds.play(sounds.SHUTTING_DOWN, False)
 
     def pause(self, state=True):
@@ -169,17 +180,22 @@ class ScanWorker(Thread):
     def stop(self):
         self.stopped = True
 
+    def shoot(self):
+        pwm.set_pwm(LASER_PIN, 0, 4095)
+
+        s = random.choice([
+            sounds.TURRET_FIRE,
+            sounds.TURRET_FIRE_2,
+            sounds.TURRET_FIRE_3
+        ])
+
+        sounds.play(s, False)
+        time.sleep(0.2)
+
+        pwm.set_pwm(LASER_PIN, 0, 0)
+
 
 if __name__ == "__main__":
-
-    LASER_PIN = 2
-
-    def shoot():
-        pwm.set_pwm(LASER_PIN, 0, 4095)
-        print("pew!")
-        sounds.play(sounds.PEW, False)
-        time.sleep(0.2)
-        pwm.set_pwm(LASER_PIN, 0, 0)
 
     """
     Test the servos.
@@ -199,7 +215,7 @@ if __name__ == "__main__":
             break
         elif(val == ""):
             scanner.pause()
-            shoot()
+            scanner.shoot()
             scanner.pause(False)
         else:
             print("Unrecognized command: '{0}'".format(val))
