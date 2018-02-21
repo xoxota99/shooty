@@ -1,5 +1,4 @@
 import math
-import time
 
 
 def map(x, in_min, in_max, out_min, out_max):
@@ -7,7 +6,7 @@ def map(x, in_min, in_max, out_min, out_max):
             / (in_max - in_min + 1) + out_min)
 
 
-def generateCurve(start, end, step_size_limit):
+def generateCurve(min_value, max_value, step_size_limit):
     """
     Generate a sine curve from the "from" value to the "to" value, not to
     exceed the given step size. Purpose of this is to have servos moving
@@ -15,21 +14,19 @@ def generateCurve(start, end, step_size_limit):
     the rig due to torque.
     """
 
-    step_count = (end-start) / step_size_limit
-    steps = []
-    halfRange = (end - start) / 2
-    i = 0
-    while(i < step_count):
-        n = end - (halfRange + math.cos(math.pi * i / step_count) * halfRange)
-        i += 1
-        steps.append(n)
+    steps = (max_value-min_value) / step_size_limit
+    retval = []
 
-    return steps
+    half_range = (max_value - min_value)/2
+    for i in range(1, steps):
+        val = int(min_value + half_range + math.sin(math.pi*i/(steps/2))
+                  * half_range)
+
+        retval.append(val)
+
+    return retval
 
 
-def delay(millis):
-    t = int(time.time() * 1000)
-    while True:
-        t2 = int(time.time() * 1000)
-        if(t2-t >= millis):
-            break
+if __name__ == "__main__":
+    val = generateCurve(-99, 99, 2)
+    print(val)
