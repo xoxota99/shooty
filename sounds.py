@@ -39,6 +39,8 @@ CLICK_4 = "media/portal/Turret_click_4.wav"
 CLICK_5 = "media/portal/Turret_click_5.wav"
 CLICK_6 = "media/portal/Turret_click_6.wav"
 
+BLOCKING = 1
+NON_BLOCKING = 0
 
 play_proc_map = {
     'darwin': {
@@ -60,7 +62,7 @@ if(platform.startswith("linux")):
     platform = "linux"
 
 
-def play(soundfile, blocking=True):
+def play(soundfile, blocking=BLOCKING):
     ext = soundfile.lower().strip()[-3:]
 
     if(ext in play_proc_map[platform].keys()):
@@ -69,13 +71,13 @@ def play(soundfile, blocking=True):
         print("Unrecognized file format: '" + ext.upper()+"'")
         return False
 
-    # print(proc + soundfile + ("" if blocking else " &"))
+    # print(proc + soundfile + ("" if blocking==BLOCKING else " &"))
 
     loc = os.path.dirname(os.path.realpath(__file__))
-
+    cmd = proc + " " + soundfile + ("" if blocking == BLOCKING else " &")
+    # print(cmd)
     # probably doesn't escape weird path characters, spaces, etc. properly
-    p = subprocess.call(proc + " " + soundfile + ("" if blocking else " &"),
-                        shell=True, cwd=loc)
+    p = subprocess.call(cmd, shell=True, cwd=loc)
 
     return p
 
