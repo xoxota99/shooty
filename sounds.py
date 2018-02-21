@@ -50,7 +50,7 @@ play_proc_map = {
     },
     'win32': {},
     'linux': {
-        'wav': 'aplay',
+        'wav': 'aplay -q',
         'mp3': 'mpg123 -q'
     }
 }
