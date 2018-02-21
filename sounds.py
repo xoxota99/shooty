@@ -11,7 +11,7 @@ STARTUP = "media/startup.wav"
 
 # Portal sounds
 # STARTUP = "media/portal/Turret_sentry_mode_activated.wav"
-# SCAN = "media/portal/Turret_ping.wav"
+SCAN2 = "media/portal/Turret_ping.wav"
 SCAN = "media/tf2/sentry_scan2.wav"
 SHUTTING_DOWN = "media/portal/Turret_shutting_down.wav"
 
