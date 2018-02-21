@@ -29,7 +29,6 @@ SERVO_MAX = 450
 # Pin configuration on the Adafruit board. Which pins are driving which servos?
 PAN_PIN = 0
 TILT_PIN = 1
-LASER_PIN = 2
 
 """
 Position of the servos, in degrees, within the range -90 to +90, with
@@ -158,21 +157,24 @@ class ScanWorker(Thread):
         Thread.__init__(self)
 
     def run(self):
+        self.paused = False
+        self.stopped = False
+
         pinging = False
-        sounds.play(sounds.TURRET_ACTIVATED, False)
+        sounds.play(sounds.TURRET_ACTIVATED, sounds.BLOCKING)
         while not self.stopped:
             if not self.paused:
                 scan()
                 t = int(round(time.time())) % 3
                 if t == 0 and not pinging:
                     pinging = True
-                    sounds.play(sounds.SCAN, False)
+                    sounds.play(sounds.SCAN, sounds.NON_BLOCKING)
                 elif t != 0:
                     pinging = False
 
             time.sleep(0.03)
 
-        sounds.play(sounds.SHUTTING_DOWN, False)
+        sounds.play(sounds.SHUTTING_DOWN, sounds.BLOCKING)
 
     def pause(self, state=True):
         self.paused = state
@@ -180,7 +182,15 @@ class ScanWorker(Thread):
     def stop(self):
         self.stopped = True
 
-    def shoot(self):
+
+if __name__ == "__main__":
+
+    LASER_PIN = 2
+
+    def shoot():
+        """
+        Fire the laser, make a "pew pew" noise, then turn off the laser.
+        """
         pwm.set_pwm(LASER_PIN, 0, 4095)
 
         s = random.choice([
@@ -189,13 +199,53 @@ class ScanWorker(Thread):
             sounds.TURRET_FIRE_3
         ])
 
-        sounds.play(s, False)
+        sounds.play(s, sounds.NON_BLOCKING)
         time.sleep(0.2)
 
         pwm.set_pwm(LASER_PIN, 0, 0)
 
+    def calibrate():
+        """
+        Aim calibration.
 
-if __name__ == "__main__":
+        Move the servos in a grid pattern, firing the laser, taking a
+        picture and recording it to disk.
+
+        From the photo output, we will be able to determine the relative servo
+        angle for each pixel in the captured image.
+        """
+
+        import picamera
+        import os
+
+        camera = picamera.PiCamera()
+        # with PiCamera() as camera:
+        # camera.resolution = (1024, 768)
+        # camera.start_preview()
+        # Camera warm-up time
+        # time.sleep(2)
+
+        pwm.set_pwm(LASER_PIN, 0, 4095)
+
+        # crash at x30_y5
+        for y in range(0, 30, 5):  # -15..30
+            for x in range(-35, 45, 5):
+                file_name = 'images/x%d_y%d.jpg' % (x, y)
+                if((not os.path.isfile(file_name)) or
+                        os.stat(file_name).st_size == 0):
+                    move_to(x, y)
+                    time.sleep(0.5)
+                    sounds.play(sounds.SCAN2, sounds.NON_BLOCKING)
+                    print(file_name)
+
+                    camera.capture(file_name)
+                    time.sleep(0.2)
+
+        pwm.set_pwm(LASER_PIN, 0, 0)
+
+        camera.close()
+
+        move_to(0, 0)
 
     """
     Test the servos.
@@ -210,12 +260,19 @@ if __name__ == "__main__":
     scanner.start()
 
     while True:
-        val = raw_input("Input Command (enter to fire, 'Q' to quit.): ")
+        val = input("Input Command (enter to fire, "
+                    "'C' to calibrate, "
+                    "'Q' to quit.): ")
+
         if(val.lower() == "q"):
             break
+        elif(val.lower() == "c"):
+            scanner.pause()
+            calibrate()
+            scanner.pause(False)
         elif(val == ""):
             scanner.pause()
-            scanner.shoot()
+            shoot()
             scanner.pause(False)
         else:
             print("Unrecognized command: '{0}'".format(val))

@@ -2,6 +2,7 @@ import os
 import subprocess
 import time
 import sys
+import helper
 
 STARTUP = "media/startup.wav"
 
@@ -42,6 +43,9 @@ CLICK_6 = "media/portal/Turret_click_6.wav"
 BLOCKING = 1
 NON_BLOCKING = 0
 
+VOLUME_SCALE_MIN = 70
+VOLUME_SCALE_MAX = 100
+
 play_proc_map = {
     'darwin': {
         'wav': 'afplay',
@@ -56,7 +60,7 @@ play_proc_map = {
 }
 
 
-VOLUME = 100
+VOLUME = VOLUME_SCALE_MAX
 platform = sys.platform
 if(platform.startswith("linux")):
     platform = "linux"
@@ -108,14 +112,14 @@ def volume(pcnt):
         :param pcnt - Percent volume to set, as an integer
         between 1-100.
     """
-
+    p = helper.map(pcnt, 0, 100, VOLUME_SCALE_MIN, VOLUME_SCALE_MAX)
     proc = {
         'darwin': lambda: 'osascript -e "set volume {:.2f}"'
-        .format(7*pcnt/100),
+        .format(7*p/100),
         'linux': lambda: "amixer sset PCM {}% &"
-        .format(pcnt),
+        .format(p),
         'win32': lambda: "nircmd.exe setsysvolume {}"
-        .format(int(65535*pcnt/100)),
+        .format(int(65535*p/100)),
     }[platform](),
 
     p = subprocess.call(proc, shell=True)
