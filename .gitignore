@@ -97,3 +97,10 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# non-CC / non-GPL media
+media/portal/
+media/tf2/
+
+# compiled Python junk
+*.pyc
