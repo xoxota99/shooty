@@ -22,9 +22,9 @@
 * [Castle creations 10A BEC](http://www.castlecreations.com/en/cc-bec-010-0004-00)
 * 2x [Hitec HS-5625MG servos](http://hitecrcd.com/products/servos/sport-servos/digital-sport-servos/hs-5625mg-high-speed-metal-gear-servo/product)
 * ServoCity Pan-tilt kit:
- * [SPT200 Pan & Tilt Kit](https://www.servocity.com/spt200) (24-tooth spline)
- * [Direct Drive Pan Mount](https://www.servocity.com/ddp-bm)
- * [1/4"-20 Round Screw Plate](https://www.servocity.com/0-250-20-round-screw-plate)
+  * [SPT200 Pan & Tilt Kit](https://www.servocity.com/spt200) (24-tooth spline)
+  * [Direct Drive Pan Mount](https://www.servocity.com/ddp-bm)
+  * [1/4"-20 Round Screw Plate](https://www.servocity.com/0-250-20-round-screw-plate)
 * [Pi Camera board](https://www.adafruit.com/product/3099)
 * [Tripod](https://www.amazon.com/dp/B005KP473Q)
 * Enclosure: I used this [Pelican 1040 case](https://www.amazon.com/dp/B002E9GQEE), and mounted it to the front of the tripod platform using an L-bracket.
