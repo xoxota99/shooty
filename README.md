@@ -16,7 +16,7 @@
 * Add controls for windage and elevation.
 * Stereo cameras, for target distance estimation and auto-elevation correction
 
-#Components
+## Components
 * [Raspberry PI 3](https://www.raspberrypi.org/products/raspberry-pi-3-model-b/), running Raspbian Stretch
 * [Adafruit Servo Hat](https://www.adafruit.com/product/2327)
 * [Castle creations 10A BEC](http://www.castlecreations.com/en/cc-bec-010-0004-00)
