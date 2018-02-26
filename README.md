@@ -34,5 +34,5 @@
 * (Optional) Hard Shutdown switch. Something like [this](https://www.sparkfun.com/products/11138) would work. Wiring this directly into the positive output from the battery lead will power-down the entire system.
 * (Optional, but strongly recommended) Power LED, so I can tell when the damn thing is on.
 * (Optional) Speaker, for making fun, Team-Fortress-inspired sentry gun noises. I used:
- * This [speaker](https://www.adafruit.com/product/1674), mounted to the inside of the enclosure.
- * This [amplifier](https://www.adafruit.com/product/2130), for driving the speaker from the RPi's underpowered audio jack.
+  * This [speaker](https://www.adafruit.com/product/1674), mounted to the inside of the enclosure.
+  * This [amplifier](https://www.adafruit.com/product/2130), for driving the speaker from the RPi's underpowered audio jack.
