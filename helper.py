@@ -1,4 +1,10 @@
 import math
+import logging
+import config  # this only SEEMS to be unused, but some logging config is run on include.
+
+logger = logging.getLogger(__name__)
+
+print(__name__)
 
 
 def map(x, in_min, in_max, out_min, out_max):
@@ -14,7 +20,7 @@ def generateCurve(min_value, max_value, step_size_limit):
     the rig due to torque.
     """
 
-    steps = (max_value-min_value) / step_size_limit
+    steps = int((max_value-min_value) / step_size_limit)
     retval = []
 
     half_range = (max_value - min_value)/2
@@ -29,4 +35,4 @@ def generateCurve(min_value, max_value, step_size_limit):
 
 if __name__ == "__main__":
     val = generateCurve(-99, 99, 2)
-    print(val)
+    logger.info(val)

@@ -1,16 +1,21 @@
-import RPi.GPIO as GPIO
 import sounds
 import time
 import random
+import pwm
+import logging
+from config import cfg
 
-TRIGGER_PIN = 5
-USE_SHOT_COUNTER = True
-MAGAZINE_SIZE = 100
-TRIGGER_DOWN_MILLIS = 50  # time to hold the trigger down.
+logger = logging.getLogger(__name__)
 
-GPIO.setmode(GPIO.BOARD)
-GPIO.setwarnings(False)
-GPIO.setup(TRIGGER_PIN, GPIO.OUT)
+PWM_TRIGGER_PIN = cfg.getint("gun", "PWM_TRIGGER_PIN")
+PWM_LASER_PIN = cfg.getint("gun", "PWM_LASER_PIN")
+
+USE_SHOT_COUNTER = cfg.getboolean("gun", "USE_SHOT_COUNTER")
+MAGAZINE_SIZE = cfg.getint("gun", "MAGAZINE_SIZE")
+
+# time to hold the trigger down.
+TRIGGER_DOWN_MILLIS = cfg.getint("gun", "TRIGGER_DOWN_MILLIS")
+GUN_ENABLED = cfg.getboolean("gun", "GUN_ENABLED")
 
 safety_on = False
 shot_count = 0
@@ -26,6 +31,19 @@ def reset():
     shot_count = 0
 
 
+def laser(seconds=0):
+    """
+    Fire the laser for the provided number of seconds, make a "pew pew" noise.
+    If <seconds> is greater than zero, turn off the laser after that many
+    seconds.
+    """
+    pwm.hat.set_pwm(PWM_LASER_PIN, 0, 4095)
+
+    if seconds > 0:
+        time.sleep(seconds)
+        pwm.hat.set_pwm(PWM_LASER_PIN, 0, 0)
+
+
 def shoot():
     """
     Shoots the gun once, holding down the trigger for TRIGGER_DOWN_MILLIS
@@ -33,31 +51,41 @@ def shoot():
     """
     global shot_count
 
-    if(not safety_on):
-        if(shot_count < MAGAZINE_SIZE or not USE_SHOT_COUNTER):
-            GPIO.output(TRIGGER_PIN, GPIO.HIGH)
-            shot_count += 1
-            time.sleep(TRIGGER_DOWN_MILLIS / 1000.0)
-            print(MAGAZINE_SIZE - shot_count)
-            # stop shooting. This part's important.
-            GPIO.output(TRIGGER_PIN, GPIO.LOW)
-            return True
+    if GUN_ENABLED:
+        if(not safety_on):
+            if(shot_count < MAGAZINE_SIZE or not USE_SHOT_COUNTER):
+                pwm.hat.set_pwm(PWM_TRIGGER_PIN, 0, 4095)
+                shot_count += 1
+                time.sleep(float(TRIGGER_DOWN_MILLIS) / 1000.0)
+                logger.debug("shots remaining: {}"
+                             .format(MAGAZINE_SIZE - shot_count))
+                # stop shooting. This part's important.
+                pwm.hat.set_pwm(PWM_TRIGGER_PIN, 0, 0)
+                return True
+            else:
+                sounds.play(random.choice([
+                    sounds.CLICK,
+                    sounds.CLICK_2,
+                    sounds.CLICK_3,
+                    sounds.CLICK_4,
+                    sounds.CLICK_5,
+                    sounds.CLICK_6,
+                ]))
+                logger.debug("Click.")
+                pwm.hat.set_pwm(PWM_TRIGGER_PIN, 0, 0)
+                return False
         else:
-            sounds.play(random.choice([
-                sounds.CLICK,
-                sounds.CLICK_2,
-                sounds.CLICK_3,
-                sounds.CLICK_4,
-                sounds.CLICK_5,
-                sounds.CLICK_6,
-            ]))
-            print("Click.")
-            GPIO.output(TRIGGER_PIN, GPIO.LOW)
+            # make damn sure.
+            pwm.hat.set_pwm(PWM_TRIGGER_PIN, 0, 0)
             return False
     else:
-        # make damn sure.
-        GPIO.output(TRIGGER_PIN, GPIO.LOW)
-        return False
+        logger.info("Gun disabled in config. pew pew. (☞ ͡° ͜ʖ ͡°)☞")
+        s = random.choice([
+            sounds.TURRET_FIRE,
+            sounds.TURRET_FIRE_2,
+            sounds.TURRET_FIRE_3
+        ])
+        sounds.play(s, sounds.NON_BLOCKING)
 
 
 if (__name__ == "__main__"):
