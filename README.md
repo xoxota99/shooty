@@ -1,5 +1,5 @@
-# Cerberus
- Cerberus is an autonomous paintball sentry platform, powered by OpenCV for Python3 on Raspberry Pi. It can be easily modified to use airsoft or Nerf guns.
+# Shooty
+ "Shooty" (short for "Rooty Tooty Point-and-Shooty") is an autonomous paintball sentry platform, powered by OpenCV for Python3 on Raspberry Pi. It can be easily modified to use airsoft or Nerf guns.
 
 **NOTE: This project is a _work in progress_. As of this writing (February-ish 2018), none of this is working yet. Caveat Emptor, and pull requests are welcome.**
 
