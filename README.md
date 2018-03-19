@@ -3,6 +3,8 @@
 
 **NOTE: This project is a _work in progress_. As of this writing (February-ish 2018), none of this is working yet. Caveat Emptor, and pull requests are welcome.**
 
+![ ](media/turret.jpg  "I see you.")
+
 ## General Algorithm
 * Use OpenCV frame-to-frame comparison to determine if there is a target in the frame. A target is the largest contiguous "blob" of changed pixels from one frame to the next (motion-based tracking).
 * Also look for the disable signal (stop sign, specific t-shirt logo, etc). When the disable signal is in the frame, the gun is made safe, and will not fire except by manually pulling the trigger.
