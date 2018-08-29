@@ -103,7 +103,7 @@ class VisionWorker(Thread):
 
                 # if the first frame is None, initialize it
                 if firstFrame is None:
-                    logger.info("Auto-calibration of Video in progres...")
+                    logger.info("Auto-calibration of Video in progress...")
                     if tempFrame is None:
                         tempFrame = gray
                         continue
@@ -114,20 +114,24 @@ class VisionWorker(Thread):
 
                         # if the delta for any pixel > 5, color it
                         # full white (255).
-                        tst = cv2.threshold(delta, 5, 255,
+                        tst = cv2.threshold(delta, CV2_THRESHOLD_MIN, 255,
                                             cv2.THRESH_BINARY)[1]
 
                         # dilate the thresholded image to fill in holes,
                         # then find contours on thresholded image
-                        tst = cv2.dilate(tst, None, iterations=2)
+                        tst = cv2.dilate(tst, None,
+                                         iterations=CV2_DILATE_ITERATIONS)
+
                         if count > CV2_WARMUP_FRAMES:
-                            # if more than 30 frames have passed
-                            logger.info("Done.\n Waiting for motion.")
+                            # if frame capture is all warmed up
+                            logger.info("Done warming up.\n Waiting for "
+                                        "motion.")
                             if not cv2.countNonZero(tst) > 0:
+                                # This is the first frame.
                                 firstFrame = gray
-                            else:
-                                continue
+                            continue
                         else:
+                            # keep warming up.
                             count += 1
                             continue
 
@@ -223,10 +227,12 @@ if __name__ == "__main__":
     out = cv2.VideoWriter('output.avi', fourcc, 20.0, (640, 480))
 
     def target_acquired_callback(target, frame):
+        """By default, do nothing. Just output the video frame and move on."""
         out.write(frame)
         time.sleep(0.001)
 
     def target_lost_callback(target, frame):
+        """By default, do nothing. Just output the video frame and move on."""
         out.write(frame)
         time.sleep(0.001)
 
