@@ -85,11 +85,6 @@ def move_to(pan, tilt=0):
 
     p = int(helper.map(pan, -90, 90, SERVO_MIN, SERVO_MAX))
     t = int(helper.map(tilt, -90, 90, SERVO_MIN, SERVO_MAX))
-    dp = abs(p-position.x)
-    dt = abs(t-position.y)
-
-    # pCurve = helper.generateCurve(position.x, p, SERVO_MAX_SPEED)
-    # tCurve = helper.generateCurve(position.y, t, SERVO_MAX_SPEED)
 
     pwm.hat.set_pwm(PAN_PIN, 0, p)
     pwm.hat.set_pwm(TILT_PIN, 0, t)
