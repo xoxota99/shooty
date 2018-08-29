@@ -44,7 +44,7 @@ def laser(seconds=0):
         pwm.hat.set_pwm(PWM_LASER_PIN, 0, 0)
 
 
-def shoot():
+def shoot(trigger_down_millis=TRIGGER_DOWN_MILLIS):
     """
     Shoots the gun once, holding down the trigger for TRIGGER_DOWN_MILLIS
     milliseconds (blocking call).
@@ -56,7 +56,7 @@ def shoot():
             if(shot_count < MAGAZINE_SIZE or not USE_SHOT_COUNTER):
                 pwm.hat.set_pwm(PWM_TRIGGER_PIN, 0, 4095)
                 shot_count += 1
-                time.sleep(float(TRIGGER_DOWN_MILLIS) / 1000.0)
+                time.sleep(float(trigger_down_millis) / 1000.0)
                 logger.debug("shots remaining: {}"
                              .format(MAGAZINE_SIZE - shot_count))
                 # stop shooting. This part's important.
