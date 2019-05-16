@@ -209,8 +209,8 @@ class VisionWorker(Thread):
         look at an image, find all the contours, and return the area of the
         largest contour above the specified area threshold.
         """
-        im, contours, hierarchy = cv2.findContours(imgmask, cv2.RETR_EXTERNAL,
-                                                   cv2.CHAIN_APPROX_SIMPLE)
+        contours = cv2.findContours(
+            imgmask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[1]
         best_area = threshold
         best_cnt = None
         for cnt in contours:
@@ -229,6 +229,8 @@ if __name__ == "__main__":
     def target_acquired_callback(target, frame):
         """By default, do nothing. Just output the video frame and move on."""
         out.write(frame)
+        # sleep to allow interrupts. 32fps = ~0.03s, so even with
+        # processing overhead, this delay shouldn't affect fps.
         time.sleep(0.001)
 
     def target_lost_callback(target, frame):

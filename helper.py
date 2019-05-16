@@ -1,15 +1,18 @@
+from __future__ import division
 import math
 import logging
-import config  # this only SEEMS to be unused, but some logging config is run on include.
+# this only SEEMS to be unused, but some logging config is run on include.
+import config
 
 logger = logging.getLogger(__name__)
 
-print(__name__)
-
 
 def map(x, in_min, in_max, out_min, out_max):
-    return ((x - in_min) * (out_max - out_min + 1)
-            / (in_max - in_min + 1) + out_min)
+    """ 
+    Maps values in one range to a value in another range. 
+    See https://www.arduino.cc/reference/en/language/functions/math/map/ 
+    """
+    return int((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min)
 
 
 def generateCurve(min_value, max_value, step_size_limit):
