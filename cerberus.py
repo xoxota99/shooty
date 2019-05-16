@@ -34,7 +34,7 @@ def target_acquired_callback(target, frame):
 
     if not locked:
         # New target.
-        logger.info("Target Acquired: ", target)
+        logger.info("Target Acquired: {0}".format(target))
         panner.pause()
         if target.friendly:
             s = random.choice({
@@ -48,10 +48,10 @@ def target_acquired_callback(target, frame):
         locked = True
 
     # aim for the center of mass
-    (sx, sy) = transform(int(target.x + target.w/2), int(target.y+target.h/2))
+    sx, sy = transform(int(target.x + target.w/2), int(target.y+target.h/2))
 
     servos.move_to(sx, sy)
-    if not vision.target.friendly:
+    if not target.friendly:
         gun.shoot()
 
 
@@ -65,7 +65,7 @@ def target_lost_callback(target, frame):
     """
     if locked:
         # we had a target, now we don't.
-        logger.info("Target Lost: ", target)
+        logger.info("Target Lost: {0}".format(target))
         panner.pause(False)
         if not target.friendly:
             sounds.play(sounds.TARGET_LOST, False)
@@ -90,15 +90,14 @@ if (__name__ == "__main__"):
 
     # "scanner" is the thread that's running the vision main loop and video
     # processing.
-    scanner = vision.VisionWorker()
+    scanner = vision.VisionWorker(
+        target_acquired_callback=target_acquired_callback, target_lost_callback=target_lost_callback)
     scanner.daemon = True
     logger.info("starting vision thread.")
-    scanner.start(target_acquired_callback=target_acquired_callback,
-                  target_lost_callback=target_lost_callback)
+    scanner.start()
 
     while not scanner.stopped:
-        val = input("Input Command (enter to fire, "
-                    "'Q' to quit.): ")
+        val = input("Input Command (enter to fire, 'Q' to quit.): ")
 
         if(val.lower() == "q"):
             break

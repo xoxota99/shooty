@@ -11,16 +11,10 @@
  read one five fifteen rest < /proc/loadavg
 
  echo "
-             /\_/\____,        ____          _
-   ,___/\_/\ \  ~     /       / ___|___ _ __| |__   ___ _ __ _   _ ___
-   \     ~  \ )   XXX        | |   / _ \ '__| '_ \ / _ \ '__| | | / __|
-     XXX     /    /\_/\___,  | |__|  __/ |  | |_) |  __/ |  | |_| \__ \\
-        \o-o/-o-o/   ~    /   \____\___|_|  |_.__/ \___|_|   \__,_|___/
-         ) /     \    XXX
-        _|    / \ \_/         Uptime........: ${UPTIME}
-     ,-/   _  \_/   \         Memory........: `cat /proc/meminfo | grep MemFree | awk {'print $2'}`kB (Free) / `cat /proc/meminfo | grep MemTotal | awk {'print $2'}`kB (Total)
-    / (   /____,__|  )        Load Averages.: ${one}, ${five}, ${fifteen} (1, 5, 15 min)
-   (  |_ (    )  \) _|        Running.......: `ps ax | wc -l | tr -d " "` processes
-  _/ _)   \   \__/   (_       IP Addr.......: `/sbin/ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'` and `wget -q -O - http://icanhazip.com/ | tail`
- (,-(,(,(,/      \,),),)      Free Space....: `df -Pm | grep -E '^/dev/root' | awk '{ print $4 }' | awk -F '.' '{ print $1 }'`MB on /dev/root
+  ____  _                 _          Uptime........: ${UPTIME}
+ / ___|| |__   ___   ___ | |_ _   _  Memory........: `cat /proc/meminfo | grep MemFree | awk {'print $2'}`kB (Free) / `cat /proc/meminfo | grep MemTotal | awk {'print $2'}`kB (Total)
+ \___ \| '_ \ / _ \ / _ \| __| | | | Load Averages.: ${one}, ${five}, ${fifteen} (1, 5, 15 min)
+  ___) | | | | (_) | (_) | |_| |_| | Running.......: `ps ax | wc -l | tr -d " "` processes
+ |____/|_| |_|\___/ \___/ \__|\__, | IP Addr.......: `/sbin/ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'` and `wget -q -O - http://icanhazip.com/ | tail`
+                              |___/  Free Space....: `df -Pm | grep -E '^/dev/root' | awk '{ print $4 }' | awk -F '.' '{ print $1 }'`MB on /dev/root
 "

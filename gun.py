@@ -35,7 +35,7 @@ def laser(seconds=0):
     """
     Fire the laser for the provided number of seconds, make a "pew pew" noise.
     If <seconds> is greater than zero, turn off the laser after that many
-    seconds.
+    seconds. (blocking call)
     """
     pwm.hat.set_pwm(PWM_LASER_PIN, 0, 4095)
 
@@ -86,10 +86,11 @@ def shoot(trigger_down_millis=TRIGGER_DOWN_MILLIS):
             sounds.TURRET_FIRE_3
         ])
         sounds.play(s, sounds.NON_BLOCKING)
+        time.sleep(float(trigger_down_millis) / 1000.0)
 
 
 if (__name__ == "__main__"):
-    """Test the gun. Very dangerous."""
+    """Test fire the gun, wherever it's currently aimed. Very dangerous."""
 
 # fire the gun once.
     shoot()

@@ -56,7 +56,7 @@ play_proc_map = {
 }
 
 
-VOLUME = 50         # volume on a scale of 0-100.
+VOLUME = 0.5         # volume on a scale of 0-100.
 
 
 def play(soundfile, blocking=BLOCKING):
@@ -92,11 +92,10 @@ def volume(pcnt):
     """
         This controls Master volume. All audio
         sources will be affected.
-        :param pcnt - Percent volume to set, as an integer
-        between 1-100.
+        :param pcnt - Percent volume to set, as a float between 0 and 1.
     """
 
-    p = helper.map(pcnt, 0, 100, VOLUME_SCALE_MIN, VOLUME_SCALE_MAX)
+    p = helper.map(pcnt, 0, 1, VOLUME_SCALE_MIN, VOLUME_SCALE_MAX)
     proc = cfg.get("sounds", "CMD_VOLUME").format(p)
 
     p = subprocess.call(proc, shell=True)
@@ -108,9 +107,10 @@ def volume(pcnt):
 volume(VOLUME)  # initialize volume
 
 if (__name__ == "__main__"):
+
     while(True):
         logger.info("===PLAY (MP3, Volume 90%)===\n")
-        volume(90)
+        volume(0.9)
         play("media/test.mp3", True)
         logger.info("returned\n")
         time.sleep(1.5)
@@ -128,13 +128,13 @@ if (__name__ == "__main__"):
         time.sleep(1.5)
 
         logger.info("===PLAY (WAV, Volume 70%)===\n")
-        volume(70)
+        volume(0.7)
         play("media/portal/GLaDOS_init_surprise.wav", True)
         logger.info("returned\n")
         time.sleep(1.5)
 
         logger.info("===PLAY (WAV, Volume 80%)===\n")
-        volume(80)
+        volume(0.8)
         play("media/portal/GLaDOS_init_surprise.wav", True)
         logger.info("returned\n")
         time.sleep(1.5)
