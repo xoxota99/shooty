@@ -196,7 +196,6 @@ if __name__ == "__main__":
         """
 
         import picamera
-        # import os
 
         camera = picamera.PiCamera()
         # with PiCamera() as camera:

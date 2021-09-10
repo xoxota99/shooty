@@ -77,8 +77,8 @@ class VisionWorker(Thread):
         cap.set(cv2.CAP_PROP_FRAME_HEIGHT, CV2_FRAME_HEIGHT)
 
         # initialize the first frame in the video stream
-        firstFrame = None
-        tempFrame = None
+        first_frame = None
+        temp_frame = None
         count = 0
 
         # loop over the frames of the video
@@ -102,15 +102,15 @@ class VisionWorker(Thread):
                 gray = cv2.GaussianBlur(gray, (21, 21), 0)
 
                 # if the first frame is None, initialize it
-                if firstFrame is None:
+                if first_frame is None:
                     logger.info("Auto-calibration of Video in progress...")
-                    if tempFrame is None:
-                        tempFrame = gray
+                    if temp_frame is None:
+                        temp_frame = gray
                         continue
                     else:
                         # delta since last frame
-                        delta = cv2.absdiff(tempFrame, gray)
-                        tempFrame = gray
+                        delta = cv2.absdiff(temp_frame, gray)
+                        temp_frame = gray
 
                         # if the delta for any pixel > 5, color it
                         # full white (255).
@@ -128,7 +128,7 @@ class VisionWorker(Thread):
                                         "motion.")
                             if not cv2.countNonZero(tst) > 0:
                                 # This is the first frame.
-                                firstFrame = gray
+                                first_frame = gray
                             continue
                         else:
                             # keep warming up.
@@ -139,10 +139,10 @@ class VisionWorker(Thread):
 
                 # compute the absolute difference between the current frame and
                 # first frame
-                frameDelta = cv2.absdiff(firstFrame, gray)
+                frame_delta = cv2.absdiff(first_frame, gray)
 
                 # if the delta for any pixel > CV2_THRESHOLD_MIN, color it full white (255), otherwise full black (0)
-                thresh = cv2.threshold(frameDelta,
+                thresh = cv2.threshold(frame_delta,
                                        CV2_THRESHOLD_MIN,
                                        255,
                                        cv2.THRESH_BINARY)[1]

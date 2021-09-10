@@ -15,7 +15,7 @@ def map(x, in_min, in_max, out_min, out_max):
     return int((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min)
 
 
-def generateCurve(min_value, max_value, step_size_limit):
+def generate_curve(min_value, max_value, step_size_limit):
     """
     Generate a sine curve from the "from" value to the "to" value, not to
     exceed the given step size. Purpose of this is to have servos moving
@@ -37,5 +37,5 @@ def generateCurve(min_value, max_value, step_size_limit):
 
 
 if __name__ == "__main__":
-    val = generateCurve(-99, 99, 2)
+    val = generate_curve(-99, 99, 2)
     logger.info(val)
