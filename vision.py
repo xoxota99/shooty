@@ -1,6 +1,6 @@
 from __future__ import division
 from threading import Thread
-import cv2
+from cv2 import cv2
 import time
 import imutils
 import logging
@@ -141,7 +141,7 @@ class VisionWorker(Thread):
                 # first frame
                 frameDelta = cv2.absdiff(firstFrame, gray)
 
-                # if the delta for any pixel > 25, color it full white (255).
+                # if the delta for any pixel > CV2_THRESHOLD_MIN, color it full white (255), otherwise full black (0)
                 thresh = cv2.threshold(frameDelta,
                                        CV2_THRESHOLD_MIN,
                                        255,

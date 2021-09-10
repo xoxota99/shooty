@@ -51,9 +51,9 @@ def generate_scan_curve(min_value, max_value, steps):
     """
     retval = []
 
-    half_range = (max_value - min_value)/2
+    half_range = (max_value - min_value) / 2
     for i in range(1, steps):
-        val = int(min_value + half_range + math.sin(math.pi*i/(steps/2))
+        val = int(min_value + half_range + math.sin(math.pi * i / (steps / 2))
                   * half_range)
 
         retval.append(val)
@@ -62,7 +62,7 @@ def generate_scan_curve(min_value, max_value, steps):
 
 
 scan_steps = generate_scan_curve(SERVO_SCAN_MIN, SERVO_SCAN_MAX,
-                                 SERVO_SCAN_MAX-SERVO_SCAN_MIN)
+                                 SERVO_SCAN_MAX - SERVO_SCAN_MIN)
 
 current_scan_step = 0
 scan_dirty = True
@@ -103,13 +103,13 @@ def scan():
         best_pos = 0
         i = 0
         for pan_pos in scan_steps:
-            if abs(pan_pos-position.x) < abs(scan_steps[best_pos]
-                                             - position.x):
+            if abs(pan_pos - position.x) < abs(scan_steps[best_pos]
+                                               - position.x):
                 best_pos = i
             i += 1
         current_scan_step = best_pos
     else:
-        current_scan_step = (current_scan_step+1) % len(scan_steps)
+        current_scan_step = (current_scan_step + 1) % len(scan_steps)
 
     p = helper.map(scan_steps[current_scan_step], -90, 90,
                    SERVO_MIN, SERVO_MAX)
@@ -139,8 +139,8 @@ def shutdown():
     x = position.x
     inc = 1 if x < 0 else -1
     for i in range(0, abs(x)):
-        logger.debug("x={0}".format(x+(i*inc)))
-        move_to(x+(i*inc), position.y)
+        logger.debug("x={0}".format(x + (i * inc)))
+        move_to(x + (i * inc), position.y)
         time.sleep(0.005)
 
     for i in range(position.y, 80):

@@ -1,7 +1,7 @@
 from __future__ import division
 import math
 import logging
-# this only SEEMS to be unused, but some logging config is run on include.
+# this only SEEMS to be unused, but some logging config is run on import.
 import config
 
 logger = logging.getLogger(__name__)
@@ -23,12 +23,12 @@ def generateCurve(min_value, max_value, step_size_limit):
     the rig due to torque.
     """
 
-    steps = int((max_value-min_value) / step_size_limit)
+    steps = int((max_value - min_value) / step_size_limit)
     retval = []
 
-    half_range = (max_value - min_value)/2
+    half_range = (max_value - min_value) / 2
     for i in range(1, steps):
-        val = int(min_value + half_range + math.sin(math.pi*i/(steps/2))
+        val = int(min_value + half_range + math.sin(math.pi * i / (steps / 2))
                   * half_range)
 
         retval.append(val)

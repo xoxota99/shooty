@@ -65,7 +65,7 @@ def play(soundfile, blocking=BLOCKING):
     if(ext in play_proc_map.keys()):
         proc = play_proc_map[ext]
     else:
-        logger.fatal("Unrecognized file format: '" + ext.upper()+"'")
+        logger.fatal("Unrecognized file format: '" + ext.upper() + "'")
         return False
 
     logger.debug(proc + soundfile + ("" if blocking == BLOCKING else " &"))
