@@ -48,7 +48,8 @@ def target_acquired_callback(target, frame):
         locked = True
 
     # aim for the center of mass
-    sx, sy = transform(int(target.x + target.w/2), int(target.y+target.h/2))
+    sx, sy = transform(int(target.x + target.w / 2),
+                       int(target.y + target.h / 2))
 
     servos.move_to(sx, sy)
     if not target.friendly:

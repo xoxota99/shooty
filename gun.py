@@ -98,7 +98,7 @@ if (__name__ == "__main__"):
     sounds.play(sounds.SCAN)
 
 # fire the gun n times.
-    for x in range(0, 3):
+    for _ in range(0, 3):
         shoot()
     time.sleep(1)
     sounds.play(sounds.SCAN)
