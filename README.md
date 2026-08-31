@@ -1,3 +1,5 @@
+
+
 # Shooty
  "Shooty" (short for "Rooty Tooty Point-and-Shooty") is an autonomous paintball sentry platform, powered by OpenCV for Python3 on Raspberry Pi. It can be easily modified to use airsoft or Nerf guns.
 
@@ -8,7 +10,7 @@
 ## General Algorithm
 * Use OpenCV frame-to-frame comparison to determine if there is a target in the frame. A target is the largest contiguous "blob" of changed pixels from one frame to the next (motion-based tracking).
 * Also look for the disable signal (stop sign, specific t-shirt logo, etc). When the disable signal is in the frame, the gun is made safe, and will not fire except by manually pulling the trigger.
-* Given the coordinates in the video frame of the thing we want to hit, translate that into elevation / range angles in our field of fire, and move the servos to "aim".
+* Given the coordinates in the video frame of the thing we want to hit, translate that into pan / tilt angles in our field of fire, and move the servos to "aim".
 * Pull the trigger.
 * Rinse, repeat.
 
